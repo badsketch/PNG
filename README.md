@@ -1,1 +1,1 @@
-# PNG
+# PNG: Picture Naming Game
