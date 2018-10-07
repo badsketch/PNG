@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 
-import './App.css';
+import './App.scss';
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <h1>Picture Naming Game</h1>
+            <div class="box has-text-centered">
+                <h1 class="title">Picture Naming Game</h1>
+                <button class="button is-danger">Click Me</button>
             </div>
         )
     }
