@@ -5,7 +5,9 @@
   "main": "index.js",
   "jest": {
     "verbose": true,
-    "setupFiles": ["./src/setupTests.js"],
+    "setupFiles": [
+      "./src/setupTests.js"
+    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "./src/fileMock.js",
       "\\.(css|scss)$": "identity-obj-proxy"
@@ -69,6 +71,9 @@
     }
   },
   "lint-staged": {
-    "*.{js, json, css, md}": ["prettier --write", "git add"]
+    "*.{js, json, css, md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
