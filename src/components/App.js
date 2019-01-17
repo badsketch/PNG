@@ -11,21 +11,36 @@ class App extends Component {
   }
   componentDidMount() {
     // integrate with getWord
-    this.getImage();
+    this.getImage("duck");
   }
   getWord() {
     console.log("yay");
   }
 
-  getImage() {
+  getImage(searchTerm) {
     let API_KEY = config.FLICKR_API_KEY;
 
+    // possibly use text argument instead of tags
+    // first get results from search
     fetch(
-      `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${API_KEY}&tags=duck&format=json&nojsoncallback=true`
+      `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${API_KEY}&tags=${searchTerm}&format=json&nojsoncallback=true`
     )
       .then(res => res.json())
       .then(res => {
-        console.log(res.photos);
+        // grab first result
+        let firstResultId = res.photos.photo[0].id;
+        // retrieves image sizes
+        return fetch(
+          `https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=${API_KEY}&photo_id=${firstResultId}&format=json&nojsoncallback=1`
+        );
+      })
+      .then(res => res.json())
+      .then(res => {
+        let imageSizes = res.sizes.size;
+        let image = imageSizes.find(
+          size => size.label === "Medium" || size.label === "Original"
+        );
+        let imageUrl = image.source;
       });
   }
   render() {
@@ -39,7 +54,7 @@ class App extends Component {
         </div>
         <div className="pictureArea">
           <div className="canvas">
-            <ImageCanvas />
+            <ImageCanvas imageUrl="what" />
           </div>
         </div>
       </div>
