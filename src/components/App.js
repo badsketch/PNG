@@ -8,7 +8,11 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.getImage = this.getImage.bind(this);
+    this.state = {
+      imageUrl: null
+    };
   }
+
   componentDidMount() {
     // integrate with getWord
     this.getImage("duck");
@@ -41,8 +45,12 @@ class App extends Component {
           size => size.label === "Medium" || size.label === "Original"
         );
         let imageUrl = image.source;
+        this.setState({
+          imageUrl
+        });
       });
   }
+
   render() {
     return (
       <div>
@@ -54,7 +62,9 @@ class App extends Component {
         </div>
         <div className="pictureArea">
           <div className="canvas">
-            <ImageCanvas imageUrl="what" />
+            {this.state.imageUrl ? (
+              <ImageCanvas url={this.state.imageUrl} />
+            ) : null}
           </div>
         </div>
       </div>
