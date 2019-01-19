@@ -11,8 +11,8 @@ export class ImageCanvas extends Component {
   componentWillMount() {
     this.setState({
       canvas: {
-        width: 800,
-        height: 600
+        width: 0,
+        height: 0
       }
     });
   }
