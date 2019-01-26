@@ -10,13 +10,17 @@ export class ImageCanvas extends Component {
       canvas: {
         width: 0,
         height: 0
-      },
-      interval: null
+      }
     };
   }
 
   componentDidMount() {
     this.setUpImage();
+  }
+
+  componentWillUnmount() {
+    // interval will try to set state when image canvas is unmounted when game ends so must be removed
+    clearInterval(this.interval);
   }
 
   componentDidUpdate(prevProps) {

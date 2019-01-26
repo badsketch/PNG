@@ -4,21 +4,35 @@ import { ImageCanvas } from "./image-canvas/ImageCanvas";
 
 import config from "../../../config";
 
+let statusENUM = {
+  READY: 1,
+  IN_PROGRESS: 2,
+  DONE: 3
+};
+
 export class GameArena extends React.Component {
   constructor(props) {
     super(props);
     this.getImage = this.getImage.bind(this);
     this.getWord = this.getWord.bind(this);
     this.checkAnswer = this.checkAnswer.bind(this);
+    this.startGame = this.startGame.bind(this);
     this.state = {
       imageUrl: null,
       answer: "",
-      timer: 10,
-      score: 0
+      timer: 7,
+      score: 0,
+      status: statusENUM.READY,
+      roundsLeft: 0
     };
   }
 
-  componentDidMount() {
+  startGame() {
+    this.setState({
+      status: statusENUM.IN_PROGRESS,
+      score: 0,
+      roundsLeft: 2
+    });
     this.getWord();
   }
 
@@ -94,34 +108,68 @@ export class GameArena extends React.Component {
       clearInterval(this.timer);
       this.setState({
         score: this.state.score + this.state.timer * 100 + 500,
-        timer: 10
+        timer: 7,
+        roundsLeft: this.state.roundsLeft - 1
       });
-      this.getWord();
       event.target.value = "";
+      if (!this.state.roundsLeft) {
+        this.setState({
+          status: statusENUM.DONE
+        });
+      } else {
+        this.getWord();
+      }
     }
   }
 
   render() {
     return (
       <div className="section">
-        <div className="has-text-centered is-size-3">
-          Score: {this.state.score}
-        </div>
-        <div className="container">
-          {this.state.imageUrl ? (
-            <ImageCanvas url={this.state.imageUrl} />
-          ) : null}
-        </div>
-        <div className="columns is-centered is-marginless">
-          <div className="column is-half">
-            <input
-              className="input is-medium"
-              type="text"
-              placeholder="type here"
-              onChange={this.checkAnswer}
-            />
+        {this.state.status == statusENUM.READY ? (
+          <div className="has-text-centered">
+            <button
+              className="button is-primary is-centered is-large"
+              onClick={this.startGame}
+            >
+              Start!
+            </button>
           </div>
-        </div>
+        ) : null}
+
+        {this.state.status == statusENUM.IN_PROGRESS ? (
+          <div>
+            <div className="has-text-centered is-size-3">
+              Score: {this.state.score}
+            </div>
+            <div className="has-text-centered has-size-6">
+              Rounds Left: {this.state.roundsLeft}
+            </div>
+            <div className="container">
+              {this.state.imageUrl ? (
+                <ImageCanvas url={this.state.imageUrl} />
+              ) : null}
+            </div>
+            <div className="columns is-centered is-marginless">
+              <div className="column is-half">
+                <input
+                  className="input is-medium"
+                  type="text"
+                  placeholder="type here"
+                  onChange={this.checkAnswer}
+                />
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {this.state.status == statusENUM.DONE ? (
+          <div className="has-text-centered">
+            <div className="is-size-2">Final Score: {this.state.score}</div>
+            <button className="button is-warning" onClick={this.startGame}>
+              Play Again
+            </button>
+          </div>
+        ) : null}
       </div>
     );
   }
