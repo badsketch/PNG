@@ -12,7 +12,9 @@ export class GameArena extends React.Component {
     this.checkAnswer = this.checkAnswer.bind(this);
     this.state = {
       imageUrl: null,
-      answer: ""
+      answer: "",
+      timer: 10,
+      score: 0
     };
   }
 
@@ -72,6 +74,15 @@ export class GameArena extends React.Component {
         this.setState({
           imageUrl
         });
+
+        // once image is loaded, begin counting down
+        this.timer = setInterval(() => {
+          if (this.state.timer > 0) {
+            this.setState({
+              timer: this.state.timer - 1
+            });
+          }
+        }, 1000);
       });
   }
 
@@ -79,6 +90,12 @@ export class GameArena extends React.Component {
   checkAnswer(event) {
     // get new word if input matches
     if (event.target.value.toLowerCase() == this.state.answer) {
+      // when answer is correct, stop timer and increment score accordingly
+      clearInterval(this.timer);
+      this.setState({
+        score: this.state.score + this.state.timer * 100 + 500,
+        timer: 10
+      });
       this.getWord();
       event.target.value = "";
     }
@@ -87,7 +104,9 @@ export class GameArena extends React.Component {
   render() {
     return (
       <div className="section">
-        <div className="has-text-centered is-size-3">Score: 0</div>
+        <div className="has-text-centered is-size-3">
+          Score: {this.state.score}
+        </div>
         <div className="container">
           {this.state.imageUrl ? (
             <ImageCanvas url={this.state.imageUrl} />
