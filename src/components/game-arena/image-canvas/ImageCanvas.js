@@ -60,13 +60,11 @@ export class ImageCanvas extends Component {
 
   render() {
     return (
-      <div>
-        <canvas
-          ref="canvas"
-          width={this.state.canvas.width}
-          height={this.state.canvas.height}
-        />
-      </div>
+      <canvas
+        ref="canvas"
+        width={this.state.canvas.width}
+        height={this.state.canvas.height}
+      />
     );
   }
 }

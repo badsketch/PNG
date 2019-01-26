@@ -68,11 +68,21 @@ export class GameArena extends React.Component {
 
   render() {
     return (
-      <div className="pictureArea">
-        <div className="canvas">
+      <div className="section">
+        <div className="has-text-centered is-size-3">Score: 0</div>
+        <div className="container">
           {this.state.imageUrl ? (
             <ImageCanvas url={this.state.imageUrl} />
           ) : null}
+        </div>
+        <div className="columns is-centered is-marginless">
+          <div className="column is-half">
+            <input
+              className="input is-medium"
+              type="text"
+              placeholder="type here"
+            />
+          </div>
         </div>
       </div>
     );
