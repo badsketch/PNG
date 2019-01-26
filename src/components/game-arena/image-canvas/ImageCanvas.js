@@ -6,19 +6,25 @@ export class ImageCanvas extends Component {
     super(props);
     this.blurImage = this.blurImage.bind(this);
     this.setUpImage = this.setUpImage.bind(this);
-  }
-
-  componentWillMount() {
-    this.setState({
+    this.state = {
       canvas: {
         width: 0,
         height: 0
-      }
-    });
+      },
+      interval: null
+    };
   }
 
   componentDidMount() {
     this.setUpImage();
+  }
+
+  componentDidUpdate(prevProps) {
+    // display new image when props are updated with new url
+    if (this.props.url != prevProps.url) {
+      clearInterval(this.interval);
+      this.setUpImage();
+    }
   }
 
   setUpImage() {
@@ -32,14 +38,17 @@ export class ImageCanvas extends Component {
           width: img.naturalWidth,
           height: img.naturalHeight,
           ctx: context,
-          blur: 30
+          blur: 20
         }
       });
-      setInterval(this.blurImage, 300, img);
+      this.interval = setInterval(this.blurImage, 200, img);
     };
   }
 
   blurImage(img) {
+    if (this.state.canvas.blur <= 0) {
+      clearInterval(this.interval);
+    }
     // image has to be redrawn ater blur
     this.state.canvas.ctx.filter = `blur(${this.state.canvas.blur}px)`;
     this.state.canvas.ctx.drawImage(

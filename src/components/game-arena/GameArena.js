@@ -9,8 +9,10 @@ export class GameArena extends React.Component {
     super(props);
     this.getImage = this.getImage.bind(this);
     this.getWord = this.getWord.bind(this);
+    this.checkAnswer = this.checkAnswer.bind(this);
     this.state = {
-      imageUrl: null
+      imageUrl: null,
+      answer: ""
     };
   }
 
@@ -29,6 +31,13 @@ export class GameArena extends React.Component {
     )
       .then(res => res.json())
       .then(res => {
+        this.setState(
+          {
+            answer: res.word.toLowerCase()
+          },
+          console.log(res.word)
+        ); // used for testing
+
         return this.getImage(res.word);
       });
   }
@@ -66,6 +75,15 @@ export class GameArena extends React.Component {
       });
   }
 
+  // compares user input with the answer
+  checkAnswer(event) {
+    // get new word if input matches
+    if (event.target.value.toLowerCase() == this.state.answer) {
+      this.getWord();
+      event.target.value = "";
+    }
+  }
+
   render() {
     return (
       <div className="section">
@@ -81,6 +99,7 @@ export class GameArena extends React.Component {
               className="input is-medium"
               type="text"
               placeholder="type here"
+              onChange={this.checkAnswer}
             />
           </div>
         </div>
