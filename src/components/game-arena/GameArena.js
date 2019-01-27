@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-
 import { ImageCanvas } from "./image-canvas/ImageCanvas";
-
+import "./GameArena.scss";
 import config from "../../../config";
 
 let statusENUM = {
@@ -17,6 +16,7 @@ export class GameArena extends React.Component {
     this.getWord = this.getWord.bind(this);
     this.checkAnswer = this.checkAnswer.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.skipRound = this.skipRound.bind(this);
     this.state = {
       imageUrl: null,
       answer: "",
@@ -30,10 +30,26 @@ export class GameArena extends React.Component {
   startGame() {
     this.setState({
       status: statusENUM.IN_PROGRESS,
+      imageUrl: null,
       score: 0,
       roundsLeft: 2
     });
     this.getWord();
+  }
+
+  skipRound() {
+    clearInterval(this.timer);
+    if (!this.state.roundsLeft) {
+      this.setState({
+        status: statusENUM.DONE
+      });
+    } else {
+      this.setState({
+        timer: 7,
+        roundsLeft: this.state.roundsLeft - 1
+      });
+      this.getWord();
+    }
   }
 
   // retrieves random word from wordnik API
@@ -144,19 +160,29 @@ export class GameArena extends React.Component {
             <div className="has-text-centered has-size-6">
               Rounds Left: {this.state.roundsLeft}
             </div>
-            <div className="container">
+            <div className="container view">
               {this.state.imageUrl ? (
                 <ImageCanvas url={this.state.imageUrl} />
               ) : null}
             </div>
-            <div className="columns is-centered is-marginless">
-              <div className="column is-half">
-                <input
-                  className="input is-medium"
-                  type="text"
-                  placeholder="type here"
-                  onChange={this.checkAnswer}
-                />
+            <div className="container">
+              <div className="field is-grouped is-grouped-centered">
+                <p className="control">
+                  <input
+                    className="input is-medium"
+                    type="text"
+                    placeholder="type here"
+                    onChange={this.checkAnswer}
+                  />
+                </p>
+                <p className="control">
+                  <button
+                    className="button is-danger is-medium"
+                    onClick={this.skipRound}
+                  >
+                    SKIP
+                  </button>
+                </p>
               </div>
             </div>
           </div>

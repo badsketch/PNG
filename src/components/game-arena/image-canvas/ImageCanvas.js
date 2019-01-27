@@ -26,7 +26,9 @@ export class ImageCanvas extends Component {
   componentDidUpdate(prevProps) {
     // display new image when props are updated with new url
     if (this.props.url != prevProps.url) {
-      clearInterval(this.interval);
+      if (this.interval) {
+        clearInterval(this.interval);
+      }
       this.setUpImage();
     }
   }
